@@ -1,0 +1,29 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  background: #020617;
+  color: #e5e7eb; /* 🔥 THIS FIXES EVERYTHING */
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  background: #020617;
+  overflow: hidden; /* same dark bg */
+}
