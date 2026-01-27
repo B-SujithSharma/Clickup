@@ -37,7 +37,7 @@ function AppRoutes() {
     }
 
     // 3️⃣ Fetch logged-in user from backend
-    fetch("http://localhost:5000/me", {
+    fetch(`${process.env.REACT_APP_API_URL}/me`, {
       headers: {
         Authorization: token,
       },
