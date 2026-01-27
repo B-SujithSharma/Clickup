@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import LeadershipSlider from "../components/LeadershipSlider";
 
-const API = "http://localhost:5000";
+// const API = "http://localhost:5000";
+const API = process.env.REACT_APP_API_URL
 const USER_CACHE_KEY = "er_task_users_v1";
 
 export default function Dashboard({ user }) {

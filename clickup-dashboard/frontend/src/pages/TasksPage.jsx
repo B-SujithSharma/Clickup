@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import "../styles/tasks.css";
 
-const API = "http://localhost:5000";
+const API = process.env.REACT_APP_API_URL;;
 const PAGE_SIZE = 12;
 
 export default function TasksPage() {

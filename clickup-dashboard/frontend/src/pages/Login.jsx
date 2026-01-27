@@ -2,7 +2,7 @@ import "../styles/login.css";
 
 export default function Login() {
   const handleLogin = () => {
-    window.location.href = "http://localhost:5000/auth/login";
+    window.location.href = /*"http://localhost:5000/auth/login"*/ `${process.env.REACT_APP_API_URL}/auth/login`;;
   };
 
   return (
