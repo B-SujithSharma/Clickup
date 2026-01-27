@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import LeadershipSlider from "../components/LeadershipSlider";
 
-// const API = "http://localhost:5000";
-const API = process.env.REACT_APP_API_URL
+const API = process.env.REACT_APP_API_URL;
 const USER_CACHE_KEY = "er_task_users_v1";
 
 export default function Dashboard({ user }) {
@@ -15,6 +14,7 @@ export default function Dashboard({ user }) {
   const [selectedUser, setSelectedUser] = useState("");
   const [overview, setOverview] = useState(null);
   const [allTasks, setAllTasks] = useState([]);
+  const [usersLoading, setUsersLoading] = useState(true); // 🔥 NEW
 
   const token = localStorage.getItem("clickup_token");
 
@@ -36,6 +36,7 @@ export default function Dashboard({ user }) {
     if (cached) {
       try {
         setAllTasks(JSON.parse(cached));
+        setUsersLoading(false);
         return;
       } catch {}
     }
@@ -51,11 +52,14 @@ export default function Dashboard({ user }) {
           setAllTasks(data);
           localStorage.setItem(USER_CACHE_KEY, JSON.stringify(data));
         }
+        setUsersLoading(false);
       })
-      .catch(() => {});
+      .catch(() => {
+        setUsersLoading(false);
+      });
   }, [token]);
 
-  /* ================= DERIVE USERS ================= */
+  /* ================= DERIVE USERS FROM TASKS ================= */
   const taskUsers = useMemo(() => {
     return Array.from(
       new Map(
@@ -178,10 +182,11 @@ export default function Dashboard({ user }) {
                 All Tasks
               </button>
 
-              {/* 🔽 PERSON DROPDOWN */}
+              {/* 🔽 PERSON DROPDOWN (DISABLED UNTIL READY) */}
               <select
                 className="select-inline compact"
                 value={selectedUser}
+                disabled={usersLoading || taskUsers.length === 0}
                 onChange={(e) => {
                   const username = e.target.value;
                   setSelectedUser(username);
@@ -194,7 +199,14 @@ export default function Dashboard({ user }) {
                   }
                 }}
               >
-                <option value="">Select person</option>
+                <option value="">
+                  {usersLoading
+                    ? "Loading people..."
+                    : taskUsers.length === 0
+                    ? "No assignees found"
+                    : "Select person"}
+                </option>
+
                 {taskUsers.map((u) => (
                   <option key={u.id} value={u.username}>
                     {u.username}
@@ -224,6 +236,7 @@ export default function Dashboard({ user }) {
                 />
                 <button
                   className="search-btn-icon"
+                  disabled={!searchName.trim()}
                   onClick={() =>
                     navigate(
                       `/tasks/search?name=${encodeURIComponent(
@@ -231,7 +244,6 @@ export default function Dashboard({ user }) {
                       )}`
                     )
                   }
-                  disabled={!searchName.trim()}
                 >
                   🔍
                 </button>
@@ -239,6 +251,7 @@ export default function Dashboard({ user }) {
             </div>
           </div>
 
+          {/* ================= LEADERSHIP ================= */}
           <div className="card leadership-card">
             <h3>Leadership Updates</h3>
             <p className="muted">
