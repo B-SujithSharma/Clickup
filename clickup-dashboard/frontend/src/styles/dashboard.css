@@ -6,6 +6,7 @@
   grid-template-columns: 35% 65%;
   gap: 10px;
   padding: 10px;
+  overflow: hidden;
 }
 
 /* ================= COMMON CARD ================= */
@@ -245,7 +246,7 @@ p, span, li, strong, small {
 }
 .leader-slide {
   height: 100%;
-  min-height: 220px; /* 🔥 FIX HEIGHT */
+  min-height: 220px; 
   border-radius: 12px;
   padding: 16px;
   cursor: pointer;
@@ -257,7 +258,6 @@ p, span, li, strong, small {
   overflow: hidden;
 }
 
-/* CONTENT TRANSITION */
 .leader-content {
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
@@ -318,7 +318,7 @@ p, span, li, strong, small {
 
 /* FIX TEXT HEIGHT */
 .leader-message {
-  min-height: 60px; /* 🔥 prevents text jump */
+  min-height: 60px; 
 }
 
 /* ARROWS */
@@ -353,4 +353,61 @@ p, span, li, strong, small {
 .slider-btn:hover {
   background: rgba(56,189,248,0.8);
   color: #020617;
+}
+.select-inline {
+  width: 160px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(15, 23, 42, 0.6);
+  color: #e5e7eb;
+  outline: none;
+  cursor: pointer;
+}
+/* ================= SEARCH INPUT WITH ICON ================= */
+
+.search-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.search-wrapper .search-inline {
+  width: 100%;
+  padding-right: 38px; /* space for icon */
+}
+
+.search-btn-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: rgba(148, 163, 184, 0.8);
+}
+
+.search-btn-icon:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.search-btn-icon:hover:not(:disabled) {
+  color: #38bdf8;
+}
+/* ===== UI TUNING ===== */
+
+.select-inline.compact {
+  width: 130px;
+}
+
+.search-wrapper.wide {
+  flex: 1.8;
+}
+
+/* Force dropdown to open downward */
+select {
+  position: relative;
+  z-index: 1;
 }

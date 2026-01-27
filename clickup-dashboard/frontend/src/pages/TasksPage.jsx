@@ -6,7 +6,7 @@ const API = "http://localhost:5000";
 const PAGE_SIZE = 12;
 
 export default function TasksPage() {
-  const { type } = useParams(); // my | all | search
+  const { type, userId } = useParams(); // my | all | search | user
   const [searchParams] = useSearchParams();
   const searchName = searchParams.get("name");
 
@@ -23,14 +23,14 @@ export default function TasksPage() {
   /* reset page when route changes */
   useEffect(() => {
     setPage(0);
-  }, [type, searchName]);
+  }, [type, searchName, userId]);
 
   /* fetch tasks */
   useEffect(() => {
     if (!token) return;
     fetchTasks();
     // eslint-disable-next-line
-  }, [type, searchName]);
+  }, [type, searchName, userId]);
 
   async function fetchTasks() {
     setLoading(true);
@@ -43,12 +43,18 @@ export default function TasksPage() {
         setLoading(false);
         return;
       }
-      url = `${API}/tasks/by-name?name=${encodeURIComponent(searchName.trim())}`;
-    } else if (type === "my") {
+      url = `${API}/tasks/by-name?name=${encodeURIComponent(
+        searchName.trim()
+      )}`;
+    } 
+    else if (type === "my") {
       url = `${API}/tasks`;
-    } else if (type === "all") {
+    } 
+    else if (type === "all" || type === "user") {
+      // 🔥 OPTION B: always load ALL tasks
       url = `${API}/tasks/all`;
-    } else {
+    } 
+    else {
       setTasks([]);
       setLoading(false);
       return;
@@ -60,9 +66,24 @@ export default function TasksPage() {
       });
       const data = await res.json();
 
-      if (Array.isArray(data)) setTasks(data);
-      else if (data?.tasks) setTasks(data.tasks);
-      else setTasks([]);
+      let allTasks = [];
+
+      if (Array.isArray(data)) {
+        allTasks = data;
+      } else if (data?.tasks) {
+        allTasks = data.tasks;
+      }
+
+      // 🔥 FILTER BY USER ID (CLIENT SIDE)
+      if (type === "user" && userId) {
+        allTasks = allTasks.filter((task) =>
+          task.assignees?.some(
+            (a) => String(a.id) === String(userId)
+          )
+        );
+      }
+
+      setTasks(allTasks);
     } catch {
       setTasks([]);
     } finally {
@@ -83,7 +104,8 @@ export default function TasksPage() {
           const q = filter.toLowerCase();
           const name = task.name?.toLowerCase() || "";
           const assignees =
-            task.assignees?.map((a) => a.username.toLowerCase()).join(" ") || "";
+            task.assignees?.map((a) => a.username.toLowerCase()).join(" ") ||
+            "";
 
           return name.includes(q) || assignees.includes(q);
         })
@@ -101,6 +123,8 @@ export default function TasksPage() {
           ? "My Tasks"
           : type === "all"
           ? "All Tasks"
+          : type === "user"
+          ? "Tasks by User"
           : `Tasks for "${searchName}"`}
       </h2>
 
