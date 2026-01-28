@@ -175,12 +175,12 @@ export default function Dashboard({ user }) {
                 My Tasks
               </button>
 
-              <button
+              {/* <button
                 className="action-btn"
                 onClick={() => navigate("/tasks/all")}
               >
                 All Tasks
-              </button>
+              </button> */}
 
               {/* 🔽 PERSON DROPDOWN (DISABLED UNTIL READY) */}
               <select
